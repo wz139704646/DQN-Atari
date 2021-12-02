@@ -142,3 +142,9 @@ out/
 
 # checkpoints
 checkpoints/
+
+# vscode
+.vscode
+
+# records when training
+record.gif
