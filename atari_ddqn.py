@@ -125,8 +125,7 @@ if __name__ == '__main__':
     config.epsilon = 1
     config.epsilon_min = 0.05
     config.eps_decay = 30000
-    # config.frames = 2000000
-    config.frames = 20000
+    config.frames = 2000000
     config.use_cuda = args.cuda
     config.learning_rate = 1e-6
     config.init_buff = 10000
