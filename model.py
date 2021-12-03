@@ -22,7 +22,7 @@ class CnnDQN(nn.Module):
     def __init__(self, inputs_shape, num_actions):
         super(CnnDQN, self).__init__()
 
-        self.inut_shape = inputs_shape
+        self.input_shape = inputs_shape
         self.num_actions = num_actions
 
         self.features = nn.Sequential(
@@ -48,5 +48,44 @@ class CnnDQN(nn.Module):
         return x
 
     def features_size(self):
-        return self.features(torch.zeros(1, *self.inut_shape)).view(1, -1).size(1)
+        return self.features(torch.zeros(1, *self.input_shape)).view(1, -1).size(1)
 
+
+class CnnDuelingDQN(nn.Module):
+    def __init__(self, inputs_shape, num_actions):
+        super(CnnDuelingDQN, self).__init__()
+
+        self.input_shape = inputs_shape
+        self.num_actions = num_actions
+
+        self.features = nn.Sequential(
+            nn.Conv2d(inputs_shape[0], 32, kernel_size=8, stride=4),
+            nn.LeakyReLU(),
+            nn.Conv2d(32, 64, kernel_size=4, stride=2),
+            nn.LeakyReLU(),
+            nn.Conv2d(64, 64, kernel_size=3, stride=1),
+            nn.LeakyReLU()
+        )
+
+        self.fc_v = nn.Sequential(
+            nn.Linear(self.features_size(), 512),
+            nn.LeakyReLU(),
+            nn.Linear(512, 1)
+        )
+        self.fc_a = nn.Sequential(
+            nn.Linear(self.features_size(), 512),
+            nn.LeakyReLU(),
+            nn.Linear(512, self.num_actions)
+        )
+
+    def forward(self, x):
+        batch_size = x.size(0)
+        x = self.features(x)
+        x = x.reshape(batch_size, -1)
+        v = self.fc_v(x)
+        a = self.fc_a(x)
+
+        return v + a - a.mean(1).view(-1, 1)
+
+    def features_size(self):
+        return self.features(torch.zeros(1, *self.input_shape)).view(1, -1).size(1)
