@@ -129,7 +129,7 @@ if __name__ == '__main__':
     config.use_cuda = args.cuda
     config.learning_rate = 1e-6
     config.init_buff = 10000
-    config.max_buff = 100000
+    config.max_buff = 80000
     config.learning_interval = 4
     config.update_tar_interval = 1000
     config.batch_size = 32
