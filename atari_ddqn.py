@@ -38,7 +38,7 @@ class CnnDDQNAgent:
         return action
 
     def learning(self, fr):
-        s0, s1, a, r, done = self.buffer.sample(self.config.batch_size)
+        s0, s1, a, r, done, _ = self.buffer.sample(self.config.batch_size)
         if self.config.use_cuda:
             s0 = s0.float().to(self.config.device)/255.0
             s1 = s1.float().to(self.config.device)/255.0

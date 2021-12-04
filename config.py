@@ -40,6 +40,12 @@ class Config:
     win_reward: float = None
     win_break: bool = None
 
+    # prioritized experience replay
+    buff_alpha: float = None
+    buff_beta: float = None
+    buff_beta_final: float = None
+    beta_anneal_steps: int = None
+
 
 
 

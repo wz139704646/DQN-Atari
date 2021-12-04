@@ -66,9 +66,13 @@ class Trainer:
                                 fr,
                                 int(fr / (time.time() - start)),
                                 loss, np.mean(all_rewards[-10:])))
+                if hasattr(self.agent.buffer, 'beta'):
+                    print(" buffer beta aneal: {}".format(self.agent.buffer.beta))
 
             if fr % self.config.log_interval == 0:
                 self.board_logger.scalar_summary('Reward per episode', ep_num, all_rewards[-1])
+                if hasattr(self.agent.buffer, 'beta'):
+                    self.board_logger.scalar_summary('Annealing beta per episode', ep_num, self.agent.buffer.beta)
 
             if self.config.checkpoint and fr % self.config.checkpoint_interval == 0:
                 self.agent.save_checkpoint(fr, self.outputdir)

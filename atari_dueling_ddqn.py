@@ -21,4 +21,4 @@ class CnnDuelingDDQNAgent(CnnDDQNAgent):
 
 
 # alias
-dueling_dqn = CnnDuelingDDQNAgent
+duel_dqn = CnnDuelingDDQNAgent

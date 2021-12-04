@@ -34,4 +34,48 @@ class RolloutStorage(object):
         actions_batch = self.actions[indices]
         rewards_batch = self.rewards[indices]
         masks_batch = self.masks[indices]
-        return obs_batch, obs_next_batch, actions_batch, rewards_batch, masks_batch
+        return obs_batch, obs_next_batch, actions_batch, rewards_batch, masks_batch, indices
+
+
+class PrioritizedRolloutStorage(RolloutStorage):
+    """prioritized experience replay buffer"""
+
+    def __init__(self, config):
+        super().__init__(config)
+
+        self.weights = torch.zeros([config.max_buff, 1])
+        self.alpha = config.buff_alpha
+        self.beta = config.buff_beta
+
+        self.weight_max = 1
+        self._eps = torch.finfo(torch.float32).eps
+
+    def add(self, obs, actions, rewards, next_obs, masks):
+        # init weight
+        self.weights[self.step] = self.weight_max ** self.alpha
+        # add normal data
+        super().add(obs, actions, rewards, next_obs, masks)
+
+    def sample(self, mini_batch_size=None):
+        mini_batch_size = mini_batch_size or 1
+        indices = np.array(list(WeightedRandomSampler(
+            self.weights[0:self.current_size].view(-1), mini_batch_size, replacement=True)))
+        obs_batch = self.obs[indices]
+        obs_next_batch = self.next_obs[indices]
+        actions_batch = self.actions[indices]
+        rewards_batch = self.rewards[indices]
+        masks_batch = self.masks[indices]
+
+        return obs_batch, obs_next_batch, actions_batch, rewards_batch, masks_batch, indices
+
+    def update_weight(self, indices, weight):
+        weight = (torch.abs(weight) + self._eps).clone().detach().cpu()
+        self.weights[indices].copy_(weight ** self.alpha)
+        self.weight_max = weight.max()
+
+    def update_beta(self, beta):
+        self.beta = beta
+
+    def get_weight(self, indices):
+        """calculate the importance sampling weight"""
+        return (self.weights[indices] / self.weights.sum() * len(self.weights)) ** (-self.beta) / self.weight_max

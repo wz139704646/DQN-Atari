@@ -6,6 +6,7 @@ from trainer import Trainer
 from atari_ddqn import *
 from atari_double_ddqn import *
 from atari_dueling_ddqn import *
+from atari_prioritized_ddqn import *
 from common.wrappers import make_atari, wrap_deepmind, wrap_pytorch
 
 
@@ -50,6 +51,11 @@ if __name__ == '__main__':
     config.win_break = True
     config.device = torch.device("cuda:"+args.cuda_id if args.cuda else "cpu")
     config.output = os.path.join(config.output, args.algo)
+    # for prioritized experience replay buffer
+    config.buff_alpha = 0.5
+    config.buff_beta = 0.4
+    config.buff_beta_final = 1.
+    config.beta_anneal_steps = 1000000
 
     # handle the atari env
     env = make_atari(config.env)
