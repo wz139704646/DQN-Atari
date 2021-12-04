@@ -71,7 +71,7 @@ class PrioritizedRolloutStorage(RolloutStorage):
     def update_weight(self, indices, weight):
         weight = (torch.abs(weight) + self._eps).clone().detach().cpu()
         self.weights[indices].copy_(weight ** self.alpha)
-        self.weight_max = weight.max()
+        self.weight_max = max(self.weight_max, weight.max())
 
     def update_beta(self, beta):
         self.beta = beta
