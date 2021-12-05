@@ -13,8 +13,9 @@ class CnnDuelingDDQNAgent(CnnDDQNAgent):
         self.model = CnnDuelingDQN(self.config.state_shape, self.config.action_dim)
         self.target_model = CnnDuelingDQN(self.config.state_shape, self.config.action_dim)
         self.target_model.load_state_dict(self.model.state_dict())
-        self.model_optim = Adam(self.model.parameters(), lr=self.config.learning_rate,
-                                eps=1e-5, weight_decay=0.95)
+        # self.model_optim = Adam(self.model.parameters(), lr=self.config.learning_rate,
+        #                         eps=1e-5, weight_decay=0.95)
+        self.model_optim = Adam(self.model.parameters(), lr=self.config.learning_rate)
 
         if self.config.use_cuda:
             self.cuda()

@@ -16,8 +16,9 @@ class CnnPrioritizedDDQNAgent(CnnDDQNAgent):
         self.model = CnnDQN(self.config.state_shape, self.config.action_dim)
         self.target_model = CnnDQN(self.config.state_shape, self.config.action_dim)
         self.target_model.load_state_dict(self.model.state_dict())
-        self.model_optim = Adam(self.model.parameters(), lr=self.config.learning_rate,
-                                eps=1e-5, weight_decay=0.95)
+        # self.model_optim = Adam(self.model.parameters(), lr=self.config.learning_rate,
+        #                         eps=1e-5, weight_decay=0.95)
+        self.model_optim = Adam(self.model.parameters(), lr=self.config.learning_rate)
 
         if self.config.use_cuda:
             self.cuda()
@@ -51,9 +52,10 @@ class CnnPrioritizedDDQNAgent(CnnDDQNAgent):
         # update buffer weights
         self.buffer.update_weight(indices, td_err)
         # update beta
-        beta = self.config.buff_beta + (self.config.buff_beta_final - self.config.buff_beta) \
-            * (fr / self.config.beta_anneal_steps)
-        self.buffer.update_beta(beta)
+        if fr <= self.config.beta_anneal_steps:
+            beta = self.config.buff_beta + (self.config.buff_beta_final - self.config.buff_beta) \
+                * (fr / self.config.beta_anneal_steps)
+            self.buffer.update_beta(beta)
 
         if fr % self.config.update_tar_interval == 0:
             self.target_model.load_state_dict(self.model.state_dict())
