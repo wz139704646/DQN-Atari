@@ -57,7 +57,7 @@ class Trainer:
             if fr > self.config.init_buff and fr % self.config.learning_interval==0:
                 loss = self.agent.learning(fr)
                 losses.append(loss)
-                self.board_logger.scalar_summary('Loss per frame', fr, loss)
+                self.board_logger.scalar_summary('fr/loss', fr, loss)
 
             if fr % self.config.print_interval == 0:
                 print(
@@ -70,9 +70,10 @@ class Trainer:
                     print(" buffer beta aneal: {}".format(self.agent.buffer.beta))
 
             if fr % self.config.log_interval == 0:
-                self.board_logger.scalar_summary('Reward per episode', ep_num, all_rewards[-1])
+                self.board_logger.scalar_summary('ep/reward', ep_num, all_rewards[-1])
+                self.board_logger.scalar_summary('ep/eps', ep_num, epsilon)
                 if hasattr(self.agent.buffer, 'beta'):
-                    self.board_logger.scalar_summary('Annealing beta per episode', ep_num, self.agent.buffer.beta)
+                    self.board_logger.scalar_summary('ep/beta', ep_num, self.agent.buffer.beta)
 
             if self.config.checkpoint and fr % self.config.checkpoint_interval == 0:
                 self.agent.save_checkpoint(fr, self.outputdir)
