@@ -46,7 +46,7 @@ if __name__ == '__main__':
     config.print_interval = 5000
     config.log_interval = 5000
     config.checkpoint = True
-    config.checkpoint_interval = 50000
+    config.checkpoint_interval = 500000
     config.win_reward = 18
     config.win_break = True
     config.device = torch.device("cuda:"+args.cuda_id if args.cuda else "cpu")
