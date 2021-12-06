@@ -37,8 +37,8 @@ class CnnPrioritizedDDQNAgent(CnnDDQNAgent):
 
         # calculate TD loss
         q_values = self.model(s0).gather(1, a)
-        # use the target network to estimate next Q
-        q_values_next = self.target_model(s1).max(1)[0].view(-1, 1)
+        # use the target network to estimate next Q (IMPORTANT: no grad.)
+        q_values_next = self.target_model(s1).detach().max(1)[0].view(-1, 1)
         # target q values
         q_values_tar = r + self.config.gamma * q_values_next * (1-done)
         td_err = q_values_tar - q_values
