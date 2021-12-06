@@ -40,7 +40,7 @@ if __name__ == '__main__':
     config.init_buff = 10000
     config.max_buff = 80000
     config.learning_interval = 4
-    config.update_tar_interval = 500
+    config.update_tar_interval = 1000
     config.batch_size = 32
     config.gif_interval = 20000
     config.print_interval = 5000

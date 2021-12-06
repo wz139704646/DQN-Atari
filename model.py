@@ -27,16 +27,16 @@ class CnnDQN(nn.Module):
 
         self.features = nn.Sequential(
             nn.Conv2d(inputs_shape[0], 32, kernel_size=8, stride=4),
-            nn.ReLU(inplace=True),
+            nn.LeakyReLU(),
             nn.Conv2d(32, 64, kernel_size=4, stride=2),
-            nn.ReLU(inplace=True),
+            nn.LeakyReLU(),
             nn.Conv2d(64, 64, kernel_size=3, stride=1),
-            nn.ReLU(inplace=True)
+            nn.LeakyReLU()
         )
 
         self.fc = nn.Sequential(
             nn.Linear(self.features_size(), 512),
-            nn.ReLU(inplace=True),
+            nn.LeakyReLU(),
             nn.Linear(512, self.num_actions)
         )
 
@@ -60,21 +60,21 @@ class CnnDuelingDQN(nn.Module):
 
         self.features = nn.Sequential(
             nn.Conv2d(inputs_shape[0], 32, kernel_size=8, stride=4),
-            nn.ReLU(inplace=True),
+            nn.LeakyReLU(),
             nn.Conv2d(32, 64, kernel_size=4, stride=2),
-            nn.ReLU(inplace=True),
+            nn.LeakyReLU(),
             nn.Conv2d(64, 64, kernel_size=3, stride=1),
-            nn.ReLU(inplace=True)
+            nn.LeakyReLU()
         )
 
         self.fc_v = nn.Sequential(
             nn.Linear(self.features_size(), 512),
-            nn.ReLU(inplace=True),
+            nn.LeakyReLU(),
             nn.Linear(512, 1)
         )
         self.fc_a = nn.Sequential(
             nn.Linear(self.features_size(), 512),
-            nn.ReLU(inplace=True),
+            nn.LeakyReLU(),
             nn.Linear(512, self.num_actions)
         )
 
