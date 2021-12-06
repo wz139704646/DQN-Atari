@@ -20,7 +20,7 @@ class CnnDoubleDQNAgent(CnnDDQNAgent):
         # double DQN use model (not target model) to choose next actions
         next_a = self.model(s1).max(1)[1].view(-1, 1)
         # use the target network to estimate next Q (IMPORTANT: no grad.)
-        q_values_next = self.target_model(s1).detach().gather(1, next_a)
+        q_values_next = self.target_model(s1).gather(1, next_a).detach()
         # target q values
         q_values_tar = r + self.config.gamma * q_values_next * (1-done)
         # mse loss
