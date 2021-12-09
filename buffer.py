@@ -1,7 +1,6 @@
-import random
 import numpy as np
 import torch
-from torch.utils.data.sampler import BatchSampler, SubsetRandomSampler, WeightedRandomSampler
+from torch.utils.data.sampler import WeightedRandomSampler
 
 
 class RolloutStorage(object):

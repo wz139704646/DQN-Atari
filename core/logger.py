@@ -1,14 +1,12 @@
 import os
 
 import numpy as np
-import scipy.misc
-from io import BytesIO, StringIO
 from torch.utils.tensorboard import SummaryWriter
 
 import matplotlib.pyplot as plt
-# from scipy.interpolate import spline, interp1d
 
 from core.util import time_seq
+
 
 plt.rcParams.update({'font.size': 13})
 plt.rcParams['figure.figsize'] = 10, 8
@@ -26,31 +24,10 @@ class TensorBoardLogger(object):
 
 	def scalar_summary(self, tag, step, value):
 		"""Log a scalar variable."""
-		# summary = tf.compat.v1.Summary(value=[tf.compat.v1.Summary.Value(tag=tag, simple_value=value)])
-		# self.writer.add_summary(summary, step)
 		self.writer.add_scalar(tag, value, global_step=step)
 
 	def image_summary(self, tag, images, step):
 		"""Log a list of images."""
-		# img_summaries = []
-		# for i, img in enumerate(images):
-		# 	# Write the image to a string
-		# 	try:
-		# 		s = StringIO()
-		# 	except:
-		# 		s = BytesIO()
-		# 	scipy.misc.toimage(img).save(s, format="png")
-
-		# 	# Create an Image object
-		# 	img_sum = tf.Summary.Image(encoded_image_string=s.getvalue(),
-		# 	                           height=img.shape[0],
-		# 	                           width=img.shape[1])
-		# 	# Create a Summary value
-		# 	img_summaries.append(tf.Summary.Value(tag='%s/%d' % (tag, i), image=img_sum))
-
-		# # Create and write Summary
-		# summary = tf.Summary(value=img_summaries)
-		# self.writer.add_summary(summary, step)
 		self.writer.add_images(tag, images, global_step=step)
 
 	def histo_summary(self, tag, values, step, bins=1000):
@@ -68,17 +45,7 @@ class TensorBoardLogger(object):
 		# Drop the start of the first bin
 		bin_edges = bin_edges[1:]
 
-		# # Add bin edges and counts
-		# for edge in bin_edges:
-		# 	hist_bucket_limit.append(edge)
-		# for c in counts:
-		# 	hist_bucket.append(c)
-
-		# # Create and write Summary
-		# summary = tf.Summary(value=[tf.Summary.Value(tag=tag, histo=hist)])
-		# self.writer.add_summary(summary, step)
-		# self.writer.flush()
-
+		# add histogram
 		self.writer.add_histogram_raw(
 			tag, hist_min, hist_max, hist_num, hist_sum,
 			hist_sum_squares, bin_edges, counts, global_step=step)
